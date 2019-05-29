@@ -25,10 +25,20 @@ struct ListIterator {
     using difference_type = ptrdiff_t;
     using iterator_category = std::bidirectional_iterator_tag;
 
-    T& operator*() const;
+    /*Gibt den Wert des Elements zurück, auf dass der Iterator zeigt*/
+    T& operator*() const
+    {
+      return node->value;
+    }
+
     T& operator->() const;
-    ListIterator<T>& operator++();
-    ListIterator<T> operator++(int);
+
+    ListIterator<T>& operator++()
+    {
+      return next();
+    }
+
+    ListIterator<T> operator++(int x);
     bool operator==(ListIterator<T> const& x) const;
     bool operator!=(ListIterator<T> const& x) const;
     
@@ -43,7 +53,7 @@ struct ListIterator {
         }
     }
 
-    ListNode <T>* node = nullptr;
+    ListNode<T>* node = nullptr;
 };
 
 template <typename T>
@@ -84,27 +94,36 @@ class List{
 
   	/* Wird aufgerufen, sobald die Liste gelöscht wird (Destruktor) */
     ~List() {
-  		//TO IMPLEMENT PROPERLY
+  		clear();
     }
 
   	/* Gibt einen Zeiger auf das erste Element in der Liste zurück */
     ListIterator<T> begin() {
     	assert(!empty());
-  		////not implemented yet
-    	return ListIterator<T>{};
+  	  ListIterator<T> itr;
+      //weise dem Iterator die erste Node zu
+      itr.node = first_;
+      return itr;
     }
 
   	/* Gibt einen Zeiger auf das letzte Element in der Liste zurück */
     ListIterator<T> end() {
     	assert(!empty());
-
-  		////not implemented yet
-    	return ListIterator<T>{};
+      ListIterator<T> itr;
+      //weise dem Iterator die letzte Node hinzu
+      itr.node = last_;
+      return itr;
     }
 
     /* löscht alle Elemente aus der Liste */
     void clear() {
-  		////not implemented yet
+  		if(!empty())
+      {
+        while (size_ > 0)
+        {
+          pop_back();
+        }      
+      }
     }
 
     /* Fügt ein Element an einer bestimmten Position ein */
@@ -194,9 +213,6 @@ class List{
     	assert(!empty());
       return last_->value;
     }
-
-//   List():
-//      first_ = nullptr;
 
   	/* checkt, ob die Liste leer ist*/
     bool empty() const {

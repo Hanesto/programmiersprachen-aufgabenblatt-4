@@ -41,7 +41,32 @@ TEST_CASE("delete an element with pop_back", "[modifiers]")
     REQUIRE(26 == list.back());
 }
 
+TEST_CASE("should be empty after clearing", "[modifiers]")
+{
+    List<int> list;
+    list.push_front(1);
+    list.push_front(2);
+    list.push_front(3);
+    list.push_front(4);
+    list.clear();
+    
+    REQUIRE(list.empty());
+}
+
+TEST_CASE("ListIterator Operatoren")
+{
+    List<int> list;
+    list.push_front(34);
+    list.push_front(18);
+    list.push_front(21);
+    ListIterator<int> itr = list.begin();
+    ListIterator<int> itr2 = list.end();
+
+    REQUIRE(*itr == 21);
+    REQUIRE(*itr2 == 34);
+}
 int main(int argc, char * argv [])
 {
+
 return Catch::Session().run(argc, argv);
 }
