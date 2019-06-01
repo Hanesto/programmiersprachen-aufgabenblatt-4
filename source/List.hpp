@@ -33,9 +33,22 @@ struct ListIterator {
 
     T& operator->() const;
 
-    ListIterator<T>& operator++()
+    ListIterator<T> operator++()
     {
-      return next();
+      ListIterator<int> itr;
+      if(nullptr != node)
+      {
+        if(itr.node->next != nullptr)
+        {
+          itr.node = itr.node->next;
+          return itr;
+        }
+      }
+      else
+      {
+        itr.node = nullptr;
+        return itr;
+      }
     }
 
     ListIterator<T> operator++(int x);

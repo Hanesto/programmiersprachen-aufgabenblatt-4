@@ -49,7 +49,7 @@ TEST_CASE("should be empty after clearing", "[modifiers]")
     list.push_front(3);
     list.push_front(4);
     list.clear();
-    
+
     REQUIRE(list.empty());
 }
 
@@ -64,6 +64,10 @@ TEST_CASE("ListIterator Operatoren")
 
     REQUIRE(*itr == 21);
     REQUIRE(*itr2 == 34);
+
+    ++itr;
+
+    REQUIRE(*itr == 18);
 }
 int main(int argc, char * argv [])
 {
