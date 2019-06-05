@@ -31,7 +31,7 @@ struct ListIterator {
       return node->value;
     }
 
-    T& operator->() const
+    T* operator->() const
     {
       return &(node->value);
     }
@@ -120,6 +120,7 @@ class List{
     List():size_{0}, first_{nullptr}, last_{nullptr} {}
 
     /* Kopiert die komplette Liste per Deep Copy */
+    /*
     List(const List<T>& list)
     {
       ListIterator<T> itr;
@@ -129,7 +130,7 @@ class List{
         push_front(itr->node->value);
       }
     }
-    
+    */
 
   	/* ... */
     //TODO: Move-Konstruktor (Aufgabe 4.13)

@@ -1,1 +1,5 @@
-add_executable(TestList TestList.cpp)
+add_executable(TestList 
+TestList.cpp
+Circle.cpp
+Vec2.cpp
+)

@@ -1,6 +1,8 @@
 #define CATCH_CONFIG_RUNNER
 #include <catch2/catch.hpp>
+#include <iostream>
 #include "List.hpp"
+#include "Circle.hpp"
 
 TEST_CASE("List size")
 {
@@ -72,10 +74,13 @@ TEST_CASE("ListIterator Operatoren")
     REQUIRE(*itr2 == 34);
 
     List<Circle> circle_list;
-    circle_list.push_back(...);
+    Vec2 center;
+    Color color;
+    const Circle c_1(center, 5, color, "Herbert");
+    circle_list.push_back(c_1);
     auto c_it = circle_list.begin();
-    std::cout<< "Der Radius des 1. Circles in der Liste ist : "
-    << c_it->get_radius() << std::endl;
+
+    REQUIRE(c_it->getRadius() == 5);
 }
 
 TEST_CASE("ListIterator gleich/ungleich")
