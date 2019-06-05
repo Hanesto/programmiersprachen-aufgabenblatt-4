@@ -31,29 +31,64 @@ struct ListIterator {
       return node->value;
     }
 
-    T& operator->() const;
+    T& operator->() const
+    {
+      return &(node->value);
+    }
 
+    /* Gibt den nächsten Knoten in der Liste zurück, soweit vorhanden */
     ListIterator<T> operator++()
     {
-      ListIterator<int> itr;
-      if(nullptr != node)
+      if(node->next != nullptr)
       {
-        if(itr.node->next != nullptr)
-        {
-          itr.node = itr.node->next;
-          return itr;
-        }
+        node = node->next;
+        return *this;
       }
       else
       {
-        itr.node = nullptr;
-        return itr;
+        return *this;
       }
     }
 
-    ListIterator<T> operator++(int x);
-    bool operator==(ListIterator<T> const& x) const;
-    bool operator!=(ListIterator<T> const& x) const;
+    /* Erhöht den Iterator, gibt aber den letzten Knoten zurück */
+    ListIterator<T> operator++(int x)
+    { 
+      if(node->next != nullptr)
+      {
+        node = node->next;
+        return *this;
+      }
+      else
+      {
+        return *this;
+      }
+    }
+
+    /* Vergleicht die Werte zweier Zeiger und gibt zurück, ob sie gleich sind */ 
+    bool operator==(ListIterator<T> const& x) const
+    {
+      if(node == x.node)
+      {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    }
+
+     /* Vergleicht die Werte zweier Zeiger und gibt zurück, ob sie ungleich sind */ 
+    bool operator!=(ListIterator<T> const& x) const
+    {
+      if(node != x.node)
+      {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    }
     
     /* Gibt die next Node der Node des Iterators aus, falls vorhanden*/
     ListIterator<T> next() const
@@ -81,11 +116,20 @@ class List{
 
     // not implemented yet
     // do not forget about the initialiser list !
-  	/* ... */
+  	/* Standard Initialisierung */
     List():size_{0}, first_{nullptr}, last_{nullptr} {}
 
-    /* ... */
-    //TODO: Copy-Konstruktor using Deep-Copy semantics (Aufgabe 4.8)
+    /* Kopiert die komplette Liste per Deep Copy */
+    List(const List<T>& list)
+    {
+      ListIterator<T> itr;
+      itr = list.begin();
+      while(itr->node->next != nullptr)
+      {
+        push_front(itr->node->value);
+      }
+    }
+    
 
   	/* ... */
     //TODO: Move-Konstruktor (Aufgabe 4.13)
@@ -99,11 +143,55 @@ class List{
   	/* ... */
     //TODO: Assignment operator (Aufgabe 4.12)
 
-  	/* ... */
-    //TODO: operator== (Aufgabe 4.7)
+  	/* Vergleicht zwei Listen auf Gleichheit */
+    bool operator ==(List const& rhs) const
+    {
+      if(size_ != rhs.size_)
+      {
+        return false;
+      }
+      else
+      {
+        ListIterator<T> itr;
+        ListIterator<T> itr2;
+        itr = begin();
+        itr2 = rhs.begin();
 
-  	/* ... */
-    //TODO: operator!= (Aufgabe 4.7)
+        for (int i = 0; i < size_; i++)
+        {
+          if(*itr != *itr2)
+          {
+            return false;
+          }
+        }
+        return true;
+      }
+    }
+
+  	/* Vergleicht zwei Listen auf Ungleichheit */
+    bool operator !=(List const& rhs) const
+    {
+       if(size_ == rhs.size_)
+      {
+        return false;
+      }
+      else
+      {
+        ListIterator<T> itr;
+        ListIterator<T> itr2;
+        itr = begin();
+        itr2 = rhs.begin();
+
+        for (int i = 0; i < size_; i++)
+        {
+          if(*itr == *itr2)
+          {
+            return false;
+          }
+        }
+        return true;
+      }
+    }
 
   	/* Wird aufgerufen, sobald die Liste gelöscht wird (Destruktor) */
     ~List() {
@@ -111,20 +199,14 @@ class List{
     }
 
   	/* Gibt einen Zeiger auf das erste Element in der Liste zurück */
-    ListIterator<T> begin() {
-    	assert(!empty());
-  	  ListIterator<T> itr;
-      //weise dem Iterator die erste Node zu
-      itr.node = first_;
+    ListIterator<T> begin() const{
+  	  ListIterator<T> itr{first_};
       return itr;
     }
 
   	/* Gibt einen Zeiger auf das letzte Element in der Liste zurück */
-    ListIterator<T> end() {
-    	assert(!empty());
-      ListIterator<T> itr;
-      //weise dem Iterator die letzte Node hinzu
-      itr.node = last_;
+    ListIterator<T> end() const{
+      ListIterator<T> itr{last_};
       return itr;
     }
 
@@ -237,7 +319,7 @@ class List{
       };
 
     /* Gibt die Anzahl an Elementen aus*/
-  std::size_t size() {
+  std::size_t size() const{
     return size_;
   };
 
