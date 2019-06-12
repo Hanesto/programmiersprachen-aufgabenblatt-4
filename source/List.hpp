@@ -50,6 +50,19 @@ struct ListIterator {
       }
     }
 
+     ListIterator<T> operator--()
+    {
+      if(node->prev != nullptr)
+      {
+        node = node->prev;
+        return *this;
+      }
+      else
+      {
+        return *this;
+      }
+    }
+
     /* Erhöht den Iterator, gibt aber den letzten Knoten zurück */
     ListIterator<T> operator++(int x)
     { 
@@ -119,18 +132,20 @@ class List{
   	/* Standard Initialisierung */
     List():size_{0}, first_{nullptr}, last_{nullptr} {}
 
-    /* Kopiert die komplette Liste per Deep Copy */
-    /*
+    /* Kopiert die komplette Liste */
     List(const List<T>& list)
     {
-      ListIterator<T> itr;
-      itr = list.begin();
-      while(itr->node->next != nullptr)
+      first_ = list.first_;
+      last_ = list.last_;
+      *this = list;
+
+     /* ListIterator<T> itr;
+      for (itr = list.begin(); itr != list.end(); ++itr)
       {
-        push_front(itr->node->value);
+        push_back(*itr);
       }
+      */
     }
-    */
 
   	/* ... */
     //TODO: Move-Konstruktor (Aufgabe 4.13)
@@ -158,7 +173,7 @@ class List{
         itr = begin();
         itr2 = rhs.begin();
 
-        for (int i = 0; i < size_; i++)
+        for (int i = 0; i < (int)size_; i++)
         {
           if(*itr != *itr2)
           {
@@ -183,7 +198,7 @@ class List{
         itr = begin();
         itr2 = rhs.begin();
 
-        for (int i = 0; i < size_; i++)
+        for (int i = 0; i < (int)size_; i++)
         {
           if(*itr == *itr2)
           {
@@ -223,10 +238,38 @@ class List{
     }
 
     /* Fügt ein Element an einer bestimmten Position ein */
-    //TODO: member function insert
+    ListIterator<T> insert(ListIterator<T> pos, T const& element)
+    {
+      ListNode<T>* newNode = new ListNode<T>{element};
+      newNode->next = pos.node;
+      newNode->prev = pos.node->prev;
+      pos.node->prev->prev->next = newNode;
+      pos.node->prev = newNode;
+
+      size_++;
+      ListIterator<T> itr = pos;
+      --itr;
+      return itr;
+    }
 
   	/* Dreht den Inhalt der Liste um */
-    //TODO: member function reverse
+    void reverse()
+    {
+      ListNode<T>* prev = new ListNode<T>;
+      ListNode<T>* curr = new ListNode<T>;
+      ListNode<T>* next = new ListNode<T>;
+      prev = nullptr;
+      curr = first_;
+
+      while(curr != nullptr)
+      {
+        next = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+      }
+      first_ = prev;
+    }
 
     /* Fügt vorne ein Element hinzu */
     void push_front(T const& element) {
@@ -269,8 +312,8 @@ class List{
     	assert(!empty());
       if(size_ == 1)
       {
-        first_ == nullptr;
-        last_ == nullptr;
+        first_ = nullptr;
+        last_ = nullptr;
         size_--;
       }
       else
@@ -286,8 +329,8 @@ class List{
     	assert(!empty());
       if(size_ == 1)
       {
-        first_ == nullptr;
-        last_ == nullptr;
+        first_ = nullptr;
+        last_ = nullptr;
         size_--;
       }
       else

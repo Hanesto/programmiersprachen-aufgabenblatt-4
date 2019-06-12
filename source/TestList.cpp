@@ -14,15 +14,19 @@ TEST_CASE("List size")
 TEST_CASE("add an element with push_front", "[modifiers]")
 {
     List<int> list;
+    list.push_front(22);
     list.push_front(42);
     REQUIRE(42 == list.front());
+    REQUIRE(22 == list.back());
 }
 
 TEST_CASE("add an element with push_back", "[modifiers]")
 {
     List<int> list;
+    list.push_back(23);
     list.push_back(26);
     REQUIRE(26 == list.back());
+    REQUIRE(23 == list.front());
 }
 
 TEST_CASE("delete an element with pop_front", "[modifiers]")
@@ -129,14 +133,52 @@ TEST_CASE("Vergleiche zwei Listen")
 
 TEST_CASE("copy constructor", "[constructor]")
 {
-List<int> list;
-list.push_front(1);
-list.push_front(2);
-list.push_front(3);
-list.push_front(4);
+    List<int> list;
+    list.push_front(14);
+    list.push_front(32);
+    list.push_front(76);
+    list.push_front(7);
 
-List<int> list2{list};
-REQUIRE(list == list2);
+    List<int> list2{list};
+
+    REQUIRE(list2 == list);
+}
+
+TEST_CASE("Inserting an Element")
+{
+    List<int> list;
+    list.push_front(4);
+    list.push_front(3);
+    list.push_front(2);
+    list.push_front(1);
+
+    ListIterator<int> itr = list.begin();
+    ++itr;
+    ++itr;
+
+    ListIterator<int> newItr = list.insert(itr, 5);
+
+    REQUIRE(newItr.node->next->value == 3);
+    REQUIRE(newItr.node->prev->value == 2);
+}
+
+TEST_CASE("reversing a List")
+{
+    List<int> list;
+    list.push_front(4);
+    list.push_front(3);
+    list.push_front(2);
+    list.push_front(1);
+
+    List<int> list2;
+    list2.push_front(1);
+    list2.push_front(2);
+    list2.push_front(3);
+    list2.push_front(4);
+
+    list.reverse();
+
+    REQUIRE(list == list2);
 }
 
 int main(int argc, char * argv [])
