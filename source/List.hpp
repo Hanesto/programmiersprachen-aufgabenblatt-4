@@ -106,15 +106,15 @@ struct ListIterator {
     /* Gibt die next Node der Node des Iterators aus, falls vorhanden*/
     ListIterator<T> next() const
     {
-        if(nullptr != node)
-        {
-            return ListIterator{node->next};
-        }else{
-            return ListIterator{nullptr};
-        }
+      if(nullptr != node)
+      {
+        return ListIterator{node->next};
+      }else{
+        return ListIterator{nullptr};
+      }
     }
 
-    ListNode<T>* node = nullptr;
+  ListNode<T>* node = nullptr;
 };
 
 template <typename T>
@@ -127,30 +127,28 @@ class List{
      using const_reference = T const&;
      using iterator = ListIterator<T>;
 
-    // not implemented yet
-    // do not forget about the initialiser list !
   	/* Standard Initialisierung */
     List():size_{0}, first_{nullptr}, last_{nullptr} {}
 
     /* Kopiert die komplette Liste */
+    
     List(const List<T>& list)
     {
       first_ = list.first_;
       last_ = list.last_;
-      *this = list;
-
-     /* ListIterator<T> itr;
-      for (itr = list.begin(); itr != list.end(); ++itr)
-      {
-        push_back(*itr);
-      }
-      */
+      size_ = list.size_;
     }
 
   	/* ... */
-    //TODO: Move-Konstruktor (Aufgabe 4.13)
-
+    List(List<T>&& list) : size_ (list.size_), first_(list.first_), last_(list.last_)
+    {
+      list.first_ = nullptr;
+      list.last_ = nullptr;
+      list.size_ = 0;
+    }
+  
     //TODO: Initializer-List Konstruktor (4.14)
+
   	/* ... */
     List(std::initializer_list<T> ini_list) {
   		//not implemented yet
